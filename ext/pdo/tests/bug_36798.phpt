@@ -10,12 +10,17 @@ PDOTest::skip();
 
 if (!strncasecmp(getenv('PDOTEST_DSN'), 'oci', strlen('oci'))){
     if (!strpos(strtolower(getenv('PDOTEST_DSN')), 'charset=we8mswin1252')) die('skip expected output valid for Oracle with WE8MSWIN1252 character set');
-
 }
 
 ?>
 --FILE--
 <?php
+if (!strncasecmp(getenv('PDOTEST_DSN'), 'dblib', strlen('dblib')) && !strpos(strtolower(getenv('PDOTEST_DSN')), ';charset=')){
+    putenv('PDOTEST_DSN='.getenv('PDOTEST_DSN').';charset=LATIN1'); // needed for MSSQL
+}
+if (!strncasecmp(getenv('PDOTEST_DSN'), 'odbc', strlen('odbc'))){
+    putenv('DB2CODEPAGE=850'); // needed for DB2
+}
 
 if (getenv('REDIR_TEST_DIR') === false) putenv('REDIR_TEST_DIR='.dirname(__FILE__) . '/../../pdo/tests/');
 require_once getenv('REDIR_TEST_DIR') . 'pdo_test.inc';
