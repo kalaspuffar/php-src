@@ -14,9 +14,12 @@ if (getenv('REDIR_TEST_DIR') === false) putenv('REDIR_TEST_DIR='.dirname(__FILE_
 require_once getenv('REDIR_TEST_DIR') . 'pdo_test.inc';
 
 $db = PDOTest::factory();
-$db->setAttribute (\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
-$db->setAttribute (\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_NUM);
-$db->setAttribute (\PDO::ATTR_EMULATE_PREPARES, false);
+// dblib does not support attributes.
+if ($db->getAttribute(PDO::ATTR_DRIVER_NAME) != 'dblib') {
+  $db->setAttribute (\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
+  $db->setAttribute (\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_NUM);
+  $db->setAttribute (\PDO::ATTR_EMULATE_PREPARES, false);
+}
 $db->exec('CREATE TABLE test(id int)');
 $db->exec('INSERT INTO test VALUES(1)');
 
